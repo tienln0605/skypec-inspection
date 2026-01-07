@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYPEC Phú Bài - Kiểm Tra Xe Tra Nạp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #003d82;
+            --primary-dark: #002554;
+            --accent: #ff6b35;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--card);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s;
+            color: var(--text);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .card-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-selector {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .form-card:active {
+            transform: scale(0.98);
+        }
+
+        .form-card-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-card-desc {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .records-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .record-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .record-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .record-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-weekly {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-monthly {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-quarterly {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .record-meta {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .record-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .filter-bar {
+            margin-bottom: 1rem;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-btn {
+            background: var(--text-light);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            animation: slideUp 0.3s;
+            max-width: 90%;
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        .inspection-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .inspection-item-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .result-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .result-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .result-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box-text {
+            font-size: 0.875rem;
+            color: #075985;
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">✈️</div>
+                <div class="logo-text">
+                    <h1>SKYPEC SÂN BAY PHÚ BÀI</h1>
+                    <p>Hệ thống kiểm tra xe tra nạp</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('nhap-lieu')">📝 Nhập liệu</button>
+            <button class="tab-btn" onclick="switchTab('danh-sach')">📋 Lịch sử</button>
+            <button class="tab-btn" onclick="switchTab('bao-cao')">📊 Thống kê</button>
+        </nav>
+
+        <!-- Tab Nhập liệu -->
+        <div id="tab-nhap-lieu" class="tab-content active">
+            <div id="form-list">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Chọn loại kiểm tra</h2>
+                    </div>
+                    <div class="form-selector" id="form-selector"></div>
+                </div>
+            </div>
+
+            <div id="form-input" style="display: none;">
+                <button class="back-btn" onclick="backToList()">← Quay lại</button>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" id="current-form-title"></h2>
+                    </div>
+                    <form id="data-form" onsubmit="saveForm(event)">
+                        <div id="form-content"></div>
+                        <button type="submit" class="btn btn-success">✅ Lưu kết quả</button>
+                        <button type="button" class="btn btn-outline" onclick="backToList()">❌ Hủy</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Danh sách -->
+        <div id="tab-danh-sach" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Lịch sử kiểm tra</h2>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="search-input" placeholder="🔍 Tìm kiếm..." onkeyup="filterRecords()">
+                    <select id="form-filter" onchange="filterRecords()">
+                        <option value="">Tất cả loại kiểm tra</option>
+                        <option value="weekly">Hàng tuần</option>
+                        <option value="monthly">Hàng tháng</option>
+                        <option value="quarterly">Hàng quý</option>
+                    </select>
+                    <select id="fueler-filter" onchange="filterRecords()">
+                        <option value="">Tất cả xe tra nạp</option>
+                    </select>
+                </div>
+                <div class="records-list" id="records-list"></div>
+            </div>
+        </div>
+
+        <!-- Tab Báo cáo -->
+        <div id="tab-bao-cao" class="tab-content">
+            <div class="stats-grid" id="stats-grid"></div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Chi tiết theo xe</h2>
+                </div>
+                <div id="detailed-stats"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Định nghĩa các biểu mẫu kiểm tra
+        const forms = {
+            'weekly': {
+                code: 'BM 23.17A',
+                name: 'Kiểm tra hàng tuần',
+                nameEn: 'Weekly Check',
+                badge: 'Tuần',
+                color: 'badge-weekly',
+                items: [
+                    {
+                        id: 'grounding_cable',
+                        title: 'Kiểm tra dây tiếp mát',
+                        titleEn: 'Grounding cable continually check',
+                        hasValue: true,
+                        valueLabel: 'Giá trị đo (Ω)',
+                        valueType: 'number'
+                    },
+                    {
+                        id: 'interlock_system',
+                        title: 'Kiểm tra hoạt động hệ thống phanh liên động',
+                        titleEn: 'Interlock system test',
+                        hasValue: false
+                    }
+                ]
+            },
+            'monthly': {
+                code: 'BM 23.17B',
+                name: 'Kiểm tra hàng tháng',
+                nameEn: 'Monthly Check',
+                badge: 'Tháng',
+                color: 'badge-monthly',
+                items: [
+                    {
+                        id: 'roof_drains',
+                        title: 'Kiểm tra thoát nước mưa trên mái',
+                        titleEn: 'Refueller roof area water drains check'
+                    },
+                    {
+                        id: 'wand_sensors',
+                        title: 'Kiểm tra thiết bị chống va chạm cánh máy bay',
+                        titleEn: 'Elevating platform wand sensors check'
+                    },
+                    {
+                        id: 'platform',
+                        title: 'Kiểm tra giàn nâng',
+                        titleEn: 'Inspection platform check'
+                    },
+                    {
+                        id: 'nozzle_strainer',
+                        title: 'Kiểm tra lưới lọc đầu ống tra nạp',
+                        titleEn: 'Fuelling nozzle strainer inspection'
+                    },
+                    {
+                        id: 'engine_shutoff',
+                        title: 'Kiểm tra thiết bị ngắt khẩn cấp động cơ',
+                        titleEn: 'Emergency Engine shut-off check'
+                    },
+                    {
+                        id: 'victaulic_joint',
+                        title: 'Kiểm tra khớp nối mềm/khớp nối Victaulic',
+                        titleEn: 'Flexible/Victaulic Joint Inspection'
+                    }
+                ]
+            },
+            'quarterly': {
+                code: 'BM 23.17C',
+                name: 'Kiểm tra hàng quý',
+                nameEn: 'Quarterly Check',
+                badge: 'Quý',
+                color: 'badge-quarterly',
+                items: [
+                    {
+                        id: 'recovery_tanks',
+                        title: 'Kiểm tra thùng thu hồi nhiên liệu JET A-1 trên xe tra nạp',
+                        titleEn: 'Product recovery tanks inspection'
+                    },
+                    {
+                        id: 'stepladder',
+                        title: 'Kiểm tra thang gấp',
+                        titleEn: 'Stepladder check'
+                    }
+                ]
+            }
+        };
+
+        const resultOptions = [
+            { value: 'satisfied', label: '✓ Đạt', labelEn: 'Satisfied' },
+            { value: 'finding', label: '✗ Không đạt', labelEn: 'Finding' },
+            { value: 'resolved', label: '✓ Đã khắc phục', labelEn: 'Resolved' },
+            { value: 'na', label: 'N/A', labelEn: 'Not applicable' }
+        ];
+
+        let currentForm = null;
+        let editingRecordId = null;
+
+        // Khởi tạo
+        function init() {
+            renderFormSelector();
+            loadRecords();
+            updateStats();
+            populateFuelerFilter();
+        }
+
+        // Hiển thị danh sách biểu mẫu
+        function renderFormSelector() {
+            const container = document.getElementById('form-selector');
+            container.innerHTML = '';
+            
+            Object.keys(forms).forEach(formId => {
+                const form = forms[formId];
+                const card = document.createElement('div');
+                card.className = 'form-card';
+                card.onclick = () => openForm(formId);
+                card.innerHTML = `
+                    <div class="form-card-badge">${form.badge}</div>
+                    <div class="form-card-title">${form.name}</div>
+                    <div class="form-card-desc">${form.nameEn} • ${form.items.length} hạng mục • ${form.code}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Mở form nhập liệu
+        function openForm(formId, recordId = null) {
+            currentForm = formId;
+            editingRecordId = recordId;
+            const form = forms[formId];
+            
+            document.getElementById('form-list').style.display = 'none';
+            document.getElementById('form-input').style.display = 'block';
+            document.getElementById('current-form-title').textContent = 
+                form.name + ' (' + form.code + ')';
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            let formHtml = `
+                <div class="info-box">
+                    <div class="info-box-title">Hướng dẫn đánh giá</div>
+                    <div class="info-box-text">
+                        <strong>√ Đạt:</strong> Hạng mục đạt yêu cầu<br>
+                        <strong>✗ Không đạt:</strong> Phát hiện sự cố<br>
+                        <strong>✓ Đã khắc phục:</strong> Sự cố đã được xử lý<br>
+                        <strong>N/A:</strong> Không áp dụng
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Xe tra nạp <span class="required">*</span></label>
+                    <input type="text" name="fueler" required placeholder="VD: F01, F02...">
+                </div>
+
+                <div class="form-group">
+                    <label>Năm <span class="required">*</span></label>
+                    <input type="number" name="year" required value="${new Date().getFullYear()}" min="2020" max="2050">
+                </div>
+
+                <div class="form-group">
+                    <label>Ngày kiểm tra <span class="required">*</span></label>
+                    <input type="date" name="check_date" required value="${today}">
+                </div>
+
+                <div class="form-group">
+                    <label>Người kiểm tra <span class="required">*</span></label>
+                    <input type="text" name="checker" required placeholder="Họ tên">
+                </div>
+
+                <div class="card-header" style="margin-top: 1.5rem;">
+                    <h3 class="card-title">Kết quả kiểm tra</h3>
+                </div>
+            `;
+
+            form.items.forEach((item, index) => {
+                formHtml += `
+                    <div class="inspection-item">
+                        <div class="inspection-item-title">
+                            ${index + 1}. ${item.title}
+                            <div style="font-size: 0.8rem; color: var(--text-light); font-weight: normal; margin-top: 0.25rem;">
+                                ${item.titleEn}
+                            </div>
+                        </div>
+                        
+                        ${item.hasValue ? `
+                            <div class="form-group">
+                                <label>${item.valueLabel}</label>
+                                <input type="${item.valueType}" name="value_${item.id}" step="0.01">
+                            </div>
+                        ` : ''}
+
+                        <div class="result-options">
+                            ${resultOptions.map(opt => `
+                                <div class="result-btn" onclick="selectResult('${item.id}', '${opt.value}', this)">
+                                    ${opt.label}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <input type="hidden" name="result_${item.id}" id="result_${item.id}">
+                    </div>
+                `;
+            });
+
+            formHtml += `
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea name="remarks" placeholder="Ghi chú thêm (nếu có)"></textarea>
+                </div>
+            `;
+
+            document.getElementById('form-content').innerHTML = formHtml;
+
+            if (recordId) {
+                loadFormData(recordId);
+            }
+        }
+
+        function selectResult(itemId, value, element) {
+            // Remove selected class from siblings
+            const parent = element.parentElement;
+            parent.querySelectorAll('.result-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selected class
+            element.classList.add('selected');
+            
+            // Update hidden input
+            document.getElementById('result_' + itemId).value = value;
+        }
+
+        function backToList() {
+            document.getElementById('form-list').style.display = 'block';
+            document.getElementById('form-input').style.display = 'none';
+            currentForm = null;
+            editingRecordId = null;
+        }
+
+        // Lưu form
+        function saveForm(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            const results = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (key.startsWith('result_')) {
+                    const itemId = key.replace('result_', '');
+                    results[itemId] = value;
+                } else if (key.startsWith('value_')) {
+                    const itemId = key.replace('value_', '');
+                    data['value_' + itemId] = value;
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            // Validate all items have results
+            const form = forms[currentForm];
+            let allCompleted = true;
+            form.items.forEach(item => {
+                if (!results[item.id]) {
+                    allCompleted = false;
+                }
+            });
+            
+            if (!allCompleted) {
+                alert('Vui lòng đánh giá tất cả các hạng mục kiểm tra!');
+                return;
+            }
+            
+            data.results = results;
+            
+            const record = {
+                id: editingRecordId || Date.now().toString(),
+                formId: currentForm,
+                formName: form.name,
+                formCode: form.code,
+                data: data,
+                createdAt: editingRecordId ? 
+                    getRecord(editingRecordId).createdAt : 
+                    new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            saveRecord(record);
+            showToast('✅ Đã lưu kết quả kiểm tra!');
+            backToList();
+            loadRecords();
+            updateStats();
+        }
+
+        // localStorage functions
+        function saveRecord(record) {
+            const records = getAllRecords();
+            const index = records.findIndex(r => r.id === record.id);
+            if (index >= 0) {
+                records[index] = record;
+            } else {
+                records.push(record);
+            }
+            localStorage.setItem('skypec_inspection_records', JSON.stringify(records));
+        }
+
+        function getAllRecords() {
+            const data = localStorage.getItem('skypec_inspection_records');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function getRecord(id) {
+            const records = getAllRecords();
+            return records.find(r => r.id === id);
+        }
+
+        function deleteRecordById(id) {
+            const records = getAllRecords();
+            const filtered = records.filter(r => r.id !== id);
+            localStorage.setItem('skypec_inspection_records', JSON.stringify(filtered));
+        }
+
+        // Load và hiển thị records
+        function loadRecords() {
+            const records = getAllRecords();
+            records.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            renderRecords(records);
+        }
+
+        function renderRecords(records) {
+            const container = document.getElementById('records-list');
+            
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        <span>ℹ️</span>
+                        <span>Chưa có dữ liệu kiểm tra</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = records.map(record => {
+                const form = forms[record.formId];
+                const hasFindings = Object.values(record.data.results).includes('finding');
+                
+                return `
+                    <div class="record-item">
+                        <div class="record-header">
+                            <div>
+                                <div class="record-title">${record.formName}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">
+                                    ${record.formCode}
+                                </div>
+                            </div>
+                            <span class="record-badge ${form.color}">${form.badge}</span>
+                        </div>
+                        <div class="record-meta">
+                            📅 ${formatDate(record.data.check_date)} • 
+                            🚚 Xe ${record.data.fueler} • 
+                            👤 ${record.data.checker}
+                            ${hasFindings ? ' • ⚠️ Có sự cố' : ' • ✅ Đạt'}
+                        </div>
+                        <div class="record-actions">
+                            <button class="btn-small btn-primary" onclick="viewRecord('${record.id}')">👁️ Xem</button>
+                            <button class="btn-small btn-outline" onclick="deleteRecord('${record.id}')">🗑️ Xóa</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterRecords() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const formFilter = document.getElementById('form-filter').value;
+            const fuelerFilter = document.getElementById('fueler-filter').value;
+            
+            let records = getAllRecords();
+            
+            records = records.filter(record => {
+                const matchSearch = !search || 
+                    record.formName.toLowerCase().includes(search) ||
+                    record.data.fueler.toLowerCase().includes(search) ||
+                    record.data.checker.toLowerCase().includes(search);
+                
+                const matchForm = !formFilter || record.formId === formFilter;
+                const matchFueler = !fuelerFilter || record.data.fueler === fuelerFilter;
+                
+                return matchSearch && matchForm && matchFueler;
+            });
+            
+            records.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            renderRecords(records);
+        }
+
+        function viewRecord(id) {
+            const record = getRecord(id);
+            if (!record) return;
+            
+            const form = forms[record.formId];
+            let details = `📋 ${record.formName} (${record.formCode})\n\n`;
+            details += `🚚 Xe: ${record.data.fueler}\n`;
+            details += `📅 Ngày: ${formatDate(record.data.check_date)}\n`;
+            details += `👤 Người KT: ${record.data.checker}\n`;
+            details += `📆 Năm: ${record.data.year}\n\n`;
+            details += `KẾT QUẢ KIỂM TRA:\n`;
+            
+            form.items.forEach((item, index) => {
+                const result = record.data.results[item.id];
+                const resultLabel = resultOptions.find(opt => opt.value === result)?.label || result;
+                details += `\n${index + 1}. ${item.title}\n`;
+                if (item.hasValue && record.data['value_' + item.id]) {
+                    details += `   Giá trị: ${record.data['value_' + item.id]} ${item.valueLabel}\n`;
+                }
+                details += `   Kết quả: ${resultLabel}\n`;
+            });
+            
+            if (record.data.remarks) {
+                details += `\n📝 Ghi chú: ${record.data.remarks}`;
+            }
+            
+            alert(details);
+        }
+
+        function deleteRecord(id) {
+            if (!confirm('Xóa bản ghi kiểm tra này?')) return;
+            deleteRecordById(id);
+            showToast('🗑️ Đã xóa!');
+            loadRecords();
+            updateStats();
+        }
+
+        function loadFormData(recordId) {
+            const record = getRecord(recordId);
+            if (!record) return;
+            
+            const form = document.getElementById('data-form');
+            
+            // Load basic fields
+            Object.keys(record.data).forEach(key => {
+                if (key !== 'results') {
+                    const input = form.elements[key];
+                    if (input) input.value = record.data[key];
+                }
+            });
+            
+            // Load results
+            Object.keys(record.data.results).forEach(itemId => {
+                const value = record.data.results[itemId];
+                document.getElementById('result_' + itemId).value = value;
+                
+                // Select the button
+                const buttons = document.querySelectorAll(`[onclick*="'${itemId}'"]`);
+                buttons.forEach(btn => {
+                    if (btn.onclick.toString().includes(`'${value}'`)) {
+                        btn.classList.add('selected');
+                    }
+                });
+            });
+        }
+
+        // Stats
+        function updateStats() {
+            const records = getAllRecords();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const thisWeek = new Date(today);
+            thisWeek.setDate(thisWeek.getDate() - 7);
+            
+            const stats = {
+                total: records.length,
+                thisWeek: records.filter(r => new Date(r.data.check_date) >= thisWeek).length,
+                withFindings: records.filter(r => 
+                    Object.values(r.data.results).includes('finding')
+                ).length,
+                byFueler: {}
+            };
+            
+            records.forEach(r => {
+                const fueler = r.data.fueler;
+                if (!stats.byFueler[fueler]) {
+                    stats.byFueler[fueler] = 0;
+                }
+                stats.byFueler[fueler]++;
+            });
+            
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${stats.total}</div>
+                    <div class="stat-label">Tổng số lần kiểm tra</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.thisWeek}</div>
+                    <div class="stat-label">Tuần này</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.withFindings}</div>
+                    <div class="stat-label">Có sự cố</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Object.keys(stats.byFueler).length}</div>
+                    <div class="stat-label">Số xe</div>
+                </div>
+            `;
+            
+            const detailedStats = Object.keys(stats.byFueler)
+                .sort((a, b) => stats.byFueler[b] - stats.byFueler[a])
+                .map(fueler => `
+                    <div class="record-item">
+                        <div class="record-header">
+                            <div class="record-title">Xe ${fueler}</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                                ${stats.byFueler[fueler]}
+                            </div>
+                        </div>
+                        <div class="record-meta">Số lần kiểm tra</div>
+                    </div>
+                `).join('');
+            
+            document.getElementById('detailed-stats').innerHTML = 
+                detailedStats || '<div class="alert alert-info"><span>ℹ️</span><span>Chưa có dữ liệu</span></div>';
+        }
+
+        function populateFuelerFilter() {
+            const records = getAllRecords();
+            const fuelers = [...new Set(records.map(r => r.data.fueler))].sort();
+            
+            const select = document.getElementById('fueler-filter');
+            fuelers.forEach(fueler => {
+                const option = document.createElement('option');
+                option.value = fueler;
+                option.textContent = 'Xe ' + fueler;
+                select.appendChild(option);
+            });
+        }
+
+        // UI helpers
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            if (tabName === 'danh-sach') {
+                loadRecords();
+            } else if (tabName === 'bao-cao') {
+                updateStats();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
